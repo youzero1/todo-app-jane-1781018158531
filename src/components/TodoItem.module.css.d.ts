@@ -5,7 +5,11 @@ declare const styles: {
   readonly checkbox: string;
   readonly checkCircle: string;
   readonly checkCircleActive: string;
+  readonly content: string;
   readonly text: string;
+  readonly dueDate: string;
+  readonly dueDateOverdue: string;
+  readonly dueDateToday: string;
   readonly actions: string;
   readonly editBtn: string;
   readonly deleteBtn: string;
