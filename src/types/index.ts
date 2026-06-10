@@ -5,4 +5,5 @@ export type Todo = {
   text: string;
   completed: boolean;
   createdAt: number;
+  dueDate?: string; // ISO date string YYYY-MM-DD
 };

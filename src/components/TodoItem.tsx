@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import styles from './TodoItem.module.css';
 import { Todo } from '@/types';
-import { Trash2, Pencil, Check, X } from 'lucide-react';
+import { Trash2, Pencil, Check, X, Calendar } from 'lucide-react';
 import clsx from 'clsx';
 
 type TodoItemProps = {
@@ -10,6 +10,28 @@ type TodoItemProps = {
   onDelete: (id: string) => void;
   onEdit: (id: string, newText: string) => void;
 };
+
+function formatDueDate(dateStr: string): { label: string; overdue: boolean; today: boolean } {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const due = new Date(year, month - 1, day);
+  const now = new Date();
+  const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diff = Math.floor((due.getTime() - todayStart.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (diff < 0) {
+    return { label: `${Math.abs(diff)}d overdue`, overdue: true, today: false };
+  } else if (diff === 0) {
+    return { label: 'Due today', overdue: false, today: true };
+  } else if (diff === 1) {
+    return { label: 'Due tomorrow', overdue: false, today: false };
+  } else {
+    return {
+      label: due.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
+      overdue: false,
+      today: false,
+    };
+  }
+}
 
 export default function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
   const [editing, setEditing] = useState(false);
@@ -47,6 +69,8 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemP
     setEditing(false);
   }
 
+  const dueDateInfo = todo.dueDate ? formatDueDate(todo.dueDate) : null;
+
   return (
     <li className={clsx(styles.item, todo.completed && styles.completed, editing && styles.editing)}>
       {!editing ? (
@@ -60,7 +84,21 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemP
               {todo.completed && <Check size={13} strokeWidth={3} />}
             </span>
           </button>
-          <span className={styles.text}>{todo.text}</span>
+          <div className={styles.content}>
+            <span className={styles.text}>{todo.text}</span>
+            {dueDateInfo && (
+              <span
+                className={clsx(
+                  styles.dueDate,
+                  dueDateInfo.overdue && !todo.completed && styles.dueDateOverdue,
+                  dueDateInfo.today && !todo.completed && styles.dueDateToday
+                )}
+              >
+                <Calendar size={11} />
+                {dueDateInfo.label}
+              </span>
+            )}
+          </div>
           <div className={styles.actions}>
             <button
               className={styles.editBtn}

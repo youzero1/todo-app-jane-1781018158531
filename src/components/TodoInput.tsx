@@ -4,19 +4,21 @@ import { Plus, ChevronsDown } from 'lucide-react';
 import clsx from 'clsx';
 
 type TodoInputProps = {
-  onAdd: (text: string) => void;
+  onAdd: (text: string, dueDate?: string) => void;
   onToggleAll: () => void;
   hasTodos: boolean;
 };
 
 export default function TodoInput({ onAdd, onToggleAll, hasTodos }: TodoInputProps) {
   const [value, setValue] = useState('');
+  const [dueDate, setDueDate] = useState('');
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>): void {
     e.preventDefault();
     if (value.trim()) {
-      onAdd(value);
+      onAdd(value, dueDate || undefined);
       setValue('');
+      setDueDate('');
     }
   }
 
@@ -33,14 +35,24 @@ export default function TodoInput({ onAdd, onToggleAll, hasTodos }: TodoInputPro
           <ChevronsDown size={18} />
         </button>
       )}
-      <input
-        className={clsx(styles.input, !hasTodos && styles.inputFull)}
-        type="text"
-        placeholder="What needs to be done?"
-        value={value}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
-        autoFocus
-      />
+      <div className={styles.inputGroup}>
+        <input
+          className={clsx(styles.input, !hasTodos && styles.inputFull)}
+          type="text"
+          placeholder="What needs to be done?"
+          value={value}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.target.value)}
+          autoFocus
+        />
+        <input
+          className={styles.dateInput}
+          type="date"
+          value={dueDate}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDueDate(e.target.value)}
+          aria-label="Due date"
+          title="Due date (optional)"
+        />
+      </div>
       <button
         type="submit"
         className={styles.addBtn}

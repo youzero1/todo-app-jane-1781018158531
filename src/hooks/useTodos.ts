@@ -25,7 +25,7 @@ export function useTodos() {
     saveTodos(todos);
   }, [todos]);
 
-  function addTodo(text: string): void {
+  function addTodo(text: string, dueDate?: string): void {
     const trimmed = text.trim();
     if (!trimmed) return;
     const newTodo: Todo = {
@@ -33,6 +33,7 @@ export function useTodos() {
       text: trimmed,
       completed: false,
       createdAt: Date.now(),
+      dueDate: dueDate || undefined,
     };
     setTodos((prev) => [newTodo, ...prev]);
   }

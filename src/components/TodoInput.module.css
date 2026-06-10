@@ -26,6 +26,14 @@
   color: var(--color-primary);
 }
 
+.inputGroup {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
 .input {
   flex: 1;
   border: none;
@@ -34,6 +42,7 @@
   color: var(--color-text);
   background: transparent;
   padding: 6px 4px;
+  min-width: 0;
 }
 
 .inputFull {
@@ -42,6 +51,24 @@
 
 .input::placeholder {
   color: var(--color-text-light);
+}
+
+.dateInput {
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  outline: none;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+
+.dateInput:focus {
+  border-color: var(--color-primary);
+  color: var(--color-text);
 }
 
 .addBtn {
